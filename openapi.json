@@ -1,0 +1,976 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Cars Rental Documentation",
+    "description": "-",
+    "contact": {
+      "email": "ansyarullahgo@gmail.com"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api/v1"
+    },
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Everything about authentication"
+    },
+    {
+      "name": "Cars",
+      "description": "Cars CRUD"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Login success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "user@example.com"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "user"
+                        },
+                        "nama": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "token": {
+                          "type": "string",
+                          "example": "jwt.token.here"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-01-01T00:00:00.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Wrong password"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_password": {
+                          "type": "string",
+                          "example": "hashed_password"
+                        },
+                        "input_password": {
+                          "type": "string",
+                          "example": "password123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register a new user",
+        "security": [
+          {
+            "auth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  },
+                  "nama": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "example": "avatar_url"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "user"
+                  }
+                },
+                "required": ["email", "password", "nama", "role"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "user@example.com"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "user"
+                        },
+                        "nama": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-01-01T00:00:00.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Superadmin cannot be created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Superadmin cannot be created"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register-member": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register a new member",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "member@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  },
+                  "nama": {
+                    "type": "string",
+                    "example": "Jane Doe"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "example": "avatar_url"
+                  }
+                },
+                "required": ["email", "password", "nama"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "member@example.com"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "users"
+                        },
+                        "nama": {
+                          "type": "string",
+                          "example": "Jane Doe"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-01-01T00:00:00.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whoami": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get current user info",
+        "security": [
+          {
+            "auth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current user info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Who am I"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nama": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "user@example.com"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "user"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cars": {
+      "get": {
+        "summary": "Get list of cars",
+        "tags": [
+          "Cars"
+        ],
+        "security": [
+          {
+            "auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search query for cars",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of cars",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Car"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new car",
+        "tags": [
+          "Cars"
+        ],
+        "security": [
+          {
+            "auth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Car created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          }
+        }
+      }
+    },
+    "/cars/{id}": {
+      "get": {
+        "summary": "Get car by ID",
+        "tags": [
+          "Cars"
+        ],
+        "security": [
+          {
+            "auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Car details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Car not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete car by ID",
+        "tags": [
+          "Cars"
+        ],
+        "security": [
+          {
+            "auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Car deleted successfully"
+          },
+          "404": {
+            "description": "Car not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update car by ID",
+        "tags": [
+          "Cars"
+        ],
+        "security": [
+          {
+            "auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Car updated successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Car not found"
+          }
+        }
+      }
+  }},
+  "components": {
+    "schemas": {
+      "Car": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "cars_name": {
+            "type": "string"
+          },
+          "cars_price": {
+            "type": "number"
+          },
+          "cars_image": {
+            "type": "string"
+          },
+          "cars_size": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "NewCar": {
+        "type": "object",
+        "properties": {
+          "cars_name": {
+            "type": "string"
+          },
+          "cars_price": {
+            "type": "number"
+          },
+          "cars_image": {
+            "type": "string",
+            "format": "binary"
+          },
+          "cars_size": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cars_name",
+          "cars_price",
+          "cars_size",
+          "cars_image",
+          "created_by"
+        ]
+      },
+      "UpdateCar": {
+        "type": "object",
+        "properties": {
+          "cars_name": {
+            "type": "string"
+          },
+          "cars_price": {
+            "type": "number"
+          },
+          "cars_image": {
+            "type": "string",
+            "format": "binary"
+          },
+          "cars_size": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "auth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Login success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "email": {
+                "type": "string",
+                "example": "user@example.com"
+              },
+              "role": {
+                "type": "string",
+                "example": "user"
+              },
+              "nama": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "token": {
+                "type": "string",
+                "example": "jwt.token.here"
+              },
+              "created_at": {
+                "type": "string",
+                "example": "2023-01-01T00:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          },
+          "nama": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "avatar_url"
+          },
+          "role": {
+            "type": "string",
+            "example": "user"
+          }
+        },
+        "required": ["email", "password", "nama", "role"]
+      },
+      "RegisterResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "User created successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "email": {
+                "type": "string",
+                "example": "user@example.com"
+              },
+              "role": {
+                "type": "string",
+                "example": "user"
+              },
+              "nama": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "created_at": {
+                "type": "string",
+                "example": "2023-01-01T00:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "RegisterMemberRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "member@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          },
+          "nama": {
+            "type": "string",
+            "example": "Jane Doe"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "avatar_url"
+          }
+        },
+        "required": ["email", "password", "nama"]
+      },
+      "RegisterMemberResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "User created successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "email": {
+                "type": "string",
+                "example": "member@example.com"
+              },
+              "role": {
+                "type": "string",
+                "example": "users"
+              },
+              "nama": {
+                "type": "string",
+                "example": "Jane Doe"
+              },
+              "created_at": {
+                "type": "string",
+                "example": "2023-01-01T00:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "WhoAmIResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "message": {
+            "type": "string",
+            "example": "Who am I"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "nama": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "email": {
+                "type": "string",
+                "example": "user@example.com"
+              },
+              "role": {
+                "type": "string",
+                "example": "user"
+              }
+            }
+          }
+        }
+      },
+      "Car": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "cars_name": {
+            "type": "string"
+          },
+          "cars_price": {
+            "type": "number"
+          },
+          "cars_image": {
+            "type": "string"
+          },
+          "cars_size": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "NewCar": {
+        "type": "object",
+        "properties": {
+          "cars_name": {
+            "type": "string"
+          },
+          "cars_price": {
+            "type": "number"
+          },
+          "cars_image": {
+            "type": "string",
+            "format": "binary"
+          },
+          "cars_size": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cars_name",
+          "cars_price",
+          "cars_size",
+          "cars_image"
+        ]
+      },
+      "UpdateCar": {
+        "type": "object",
+        "properties": {
+          "cars_name": {
+            "type": "string"
+          },
+          "cars_price": {
+            "type": "number"
+          },
+          "cars_image": {
+            "type": "string",
+            "format": "binary"
+          },
+          "cars_size": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
